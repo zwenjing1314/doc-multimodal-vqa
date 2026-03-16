@@ -1,0 +1,75 @@
+# 第一步：忽略data目录下的所有内容
+data/*
+
+datasets/*
+!data/.gitkeep
+!data/README.md
+
+# 第二步：但不要忽略.gitkeep文件
+!data/.gitkeep
+# 数据目录 - 保留空目录结构但忽略内容
+data/*
+!data/.gitkeep
+!data/README.md
+
+# 模型权重文件 - 保留目录但忽略.pth文件
+weights/models/
+weights/models/*
+!weights/.gitkeep
+!weights/README.md
+
+# 输出文件
+outputs/
+
+# Python缓存
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# 包和构建文件
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# IDE文件
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# 系统文件
+.DS_Store
+Thumbs.db
+
+# 环境文件
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# 其他大文件
+*.pth
+*.pt
+*.bin
+*.h5
+*.hdf5
+*.pkl
+*.pickle

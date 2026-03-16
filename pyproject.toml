@@ -1,0 +1,179 @@
+#  项目的配置文件，使用现代化的 Python 打包标准。主要作用包括：
+#  项目构建配置 - 定义如何构建这个 Python 包
+#  依赖管理 - 声明项目所需的所有依赖包
+#  开发工具配置 - 配置代码质量工具（ruff、mypy、pytest）
+#  项目元信息 - 包含项目名称、版本、描述等
+
+#  它替代了什么？
+#    替代分散的项目配置文件
+#        传统的 setup.py、setup.cfg、requirements.txt、MANIFEST.in 等文件可以被一个统一的 pyproject.toml 整合，集中管理项目依赖、构建系统和发布信息。
+#    替代其他配置文件格式
+#        在一些工具中，TOML 逐渐取代了 INI（如 pytest.ini、tox.ini）、YAML（如 docker-compose.yml）、JSON（如 .eslintrc.json）等，因为 TOML 在保持简洁的同时提供了更强的表达能力和类型支持。
+#    替代环境变量/硬编码配置
+#        应用可以使用 TOML 文件来存储配置参数（如数据库连接、API 密钥等），替代直接在代码中硬编码或依赖环境变量。
+
+# 构建系统配置
+[build-system]
+# 指定构建后端和所需的构建依赖
+requires = ["setuptools>=68", "wheel"]
+# 使用 setuptools 作为构建后端
+build-backend = "setuptools.build_meta"
+
+# 项目核心元信息
+[project]
+# 项目/包的名称
+name = "mm-docvqa"
+# 语义化版本号
+version = "0.1.0"
+# 项目的简短描述
+description = "A document multimodal QA project for DocVQA and ChartQA."
+# README 文件路径（用于 PyPI 展示）
+readme = "README.md"
+# 要求的 Python 版本范围
+requires-python = ">=3.11"
+# 项目作者信息
+authors = [
+  { name = "Z WenJing" }
+]
+# 运行时依赖的第三方库
+dependencies = [
+  # 深度学习框架
+  "torch",
+  "torchvision",
+  "torchaudio",
+  # Hugging Face transformers 库，用于预训练模型
+  "transformers",
+  # 数据集加载和处理
+  "datasets",
+  # 模型评估指标计算
+  "evaluate",
+  # 模型加速和量化
+  "accelerate",
+  # 参数高效微调 (LoRA 等)
+  "peft",
+  # 图像处理库
+  "pillow",
+  # OpenCV 计算机视觉库（无头模式，适合服务器）
+  "opencv-python-headless",
+   # 数据验证和序列化（版本 2+）
+  "pydantic>=2",
+  # YAML 文件解析
+  "pyyaml",
+   # 进度条显示
+  "tqdm",
+  # 数值计算
+  "numpy",
+  # 数据分析
+  "pandas"
+]
+
+# 可选依赖（额外功能）
+[project.optional-dependencies]
+# 开发环境所需的依赖，通过 pip install -e ".[dev]" 安装
+dev = [
+  # 测试框架
+  "pytest",
+  # 测试覆盖率报告
+  "pytest-cov",
+  # 代码格式化和检查
+  "ruff",
+  # 静态类型检查
+  "mypy",
+  # Git hooks 管理
+  "pre-commit",
+  # PyYAML 的类型存根
+  "types-PyYAML"
+]
+
+# Setuptools 打包配置
+[tool.setuptools]
+# 包的目录结构映射（src 布局）
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+# 从 src 目录查找包
+where = ["src"]
+
+# Ruff 代码检查配置（快速的 Python linter）
+[tool.ruff]
+# 目标 Python 版本
+target-version = "py311"
+# 每行最大字符数
+line-length = 100
+# 源代码搜索路径
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+# 启用的规则类别：
+# E - pycodestyle 错误
+# F - Pyflakes（导入检测等）
+# I - isort（导入排序）
+# B - flake8-bugbear（常见 bug 检测）
+# UP - pyupgrade（语法升级建议）
+select = [
+  "E",
+  "F",
+  "I",
+  "B",
+  "UP"
+]
+# 忽略的规则：
+# E501 - 行长度超限（因为使用了格式化器）
+ignore = [
+  "E501"
+]
+
+[tool.ruff.format]
+# 字符串引号风格
+quote-style = "double"
+# 缩进风格
+indent-style = "space"
+# 是否格式化 docstring 中的代码示例
+docstring-code-format = true
+
+# MyPy 静态类型检查配置
+[tool.mypy]
+# 目标 Python 版本
+python_version = "3.11"
+# 模块搜索路径
+mypy_path = "src"
+# 警告所有返回值类型
+warn_return_any = true
+# 警告未使用的配置项
+warn_unused_configs = true
+# 不允许未定义类型的函数
+disallow_untyped_defs = true
+# 不允许隐式可选类型
+no_implicit_optional = true
+# 检查未定义类型的装饰器
+check_untyped_defs = true
+# 严格比较操作符检查
+strict_equality = true
+# 输出格式美化
+pretty = true
+# 排除的目录
+exclude = [
+  "notebooks/",
+  "outputs/",
+  "data/"
+]
+
+# 为没有类型注解的第三方库禁用导入错误
+[[tool.mypy.overrides]]
+module = [
+  "cv2",
+  "transformers",
+  "datasets",
+  "evaluate",
+  "peft"
+]
+ignore_missing_imports = true
+
+# Pytest 测试配置
+[tool.pytest.ini_options]
+# Python 模块搜索路径
+pythonpath = ["src"]
+# 测试文件搜索路径
+testpaths = ["tests"]
+# 默认命令行参数（-q 表示安静模式）
+addopts = "-q"

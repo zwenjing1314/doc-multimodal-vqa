@@ -1,0 +1,58 @@
+{
+  "status": "Succeeded",
+  "recognitionResults": [
+    {
+      "page": 1,
+      "clockwiseOrientation": 359.96,
+      "width": 1692,
+      "height": 2245,
+      "unit": "pixel",
+      "lines": [
+        {
+          "boundingBox": [622, 138, 1137, 136, 1138, 167, 622, 168],
+          "text": "R. J. REYNOLDS TOBACCO COMPANY",
+          "words": [
+            {
+              "boundingBox": [622, 138, 655, 139, 656, 168, 624, 167],
+              "text": "R."
+            },
+            {
+              "boundingBox": [661, 139, 685, 140, 687, 168, 662, 168],
+              "text": "J."
+            },
+            {
+              "boundingBox": [691, 140, 847, 141, 849, 168, 692, 168],
+              "text": "REYNOLDS"
+            },
+            {
+              "boundingBox": [855, 141, 988, 140, 991, 167, 857, 168],
+              "text": "TOBACCO"
+            },
+            {
+              "boundingBox": [998, 140, 1135, 137, 1138, 165, 1000, 167],
+              "text": "COMPANY"
+            }
+          ]
+        },
+        {
+          "boundingBox": [143, 255, 796, 254, 797, 281, 144, 282],
+          "text": "Request For Taxpayer Identification Number and Certification",
+          "words": [
+            {
+              "boundingBox": [144, 256, 234, 256, 234, 282, 144, 281],
+              "text": "Request"
+            },
+            {
+              "boundingBox": [239, 256, 278, 257, 277, 282, 239, 282],
+              "text": "For"
+            },
+            {
+              "boundingBox": [283, 257, 376, 257, 376, 282, 282, 282],
+              "text": "Taxpayer"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

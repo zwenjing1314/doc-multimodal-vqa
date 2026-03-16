@@ -1,0 +1,11 @@
+{
+  "questionId": 337,
+  "question": "what is the date mentioned in this letter?",
+  "question_types": ["handwritten", "form"],
+  "image": "documents/xnbl0037_1.png",
+  "docId": 279,
+  "ucsf_document_id": "xnbl0037",
+  "ucsf_document_page_no": "1",
+  "answers": ["1/8/93"],
+  "data_split": "train"
+}
