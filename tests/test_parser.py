@@ -14,7 +14,6 @@ from mm_docvqa.data.parser_docvqa import (
     parse_docvqa_sample,
 )
 
-
 FIXTURE_DIR = Path(__file__).parent / "fixtures"
 
 

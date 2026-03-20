@@ -1,3 +1,7 @@
+"""
+oader.py - 数据加载层（高层 API）
+这个文件提供了方便的工具函数来加载和管理数据集。
+"""
 from __future__ import annotations
 
 import json
@@ -15,7 +19,8 @@ from mm_docvqa.domain.schemas import DatasetManifest, OCRPage
 @dataclass(slots=True, frozen=True)
 class DocVQAPaths:
     """
-    Standard local paths for the downloaded DocVQA dataset.
+    定义 DocVQA 数据集的标准目录结构
+    设计目的：集中管理路径，避免硬编码散落在各处
     """
 
     root: Path
@@ -25,6 +30,14 @@ class DocVQAPaths:
 
     @classmethod
     def from_root(cls, root: str | Path) -> "DocVQAPaths":
+        """
+        工厂方法：只需提供根目录，自动推导其他路径
+        预期目录结构：
+        root/
+        ├── spdocvqa_qas/    # QA 标注 JSON
+        ├── spdocvqa_images/ # 图像文件
+        └── spdocvqa_ocr/    # OCR JSON
+        """
         root = Path(root)
         return cls(
             root=root,
@@ -34,6 +47,7 @@ class DocVQAPaths:
         )
 
 
+# 基础加载函数
 def load_json(path: str | Path) -> dict[str, Any]:
     """
     Load a JSON file from disk.
@@ -52,6 +66,7 @@ def load_docvqa_manifest(qas_json_path: str | Path) -> DatasetManifest:
     return manifest
 
 
+# 图像路径处理
 def resolve_docvqa_image_path(images_dir: str | Path, relative_image_path: str) -> str:
     """
     Resolve a relative image path like:
@@ -64,9 +79,27 @@ def resolve_docvqa_image_path(images_dir: str | Path, relative_image_path: str) 
     return str(images_dir / relative_image_path)
 
 
+def resolve_docvqa_ocr_path(ocr_dir: str | Path, relative_image_path: str) -> str:
+    """
+    Resolve OCR path from relative image path.
+
+    Example:
+    documents/xnbl0037_1.png
+    ->
+    /.../spdocvqa_ocr/xnbl0037_1.json
+
+    Assumption:
+    OCR file name and image file name are one-to-one matched by stem.
+    """
+    ocr_dir = Path(ocr_dir)
+    image_name = Path(relative_image_path).name
+    ocr_name = Path(image_name).stem + ".json"
+    return str(ocr_dir / ocr_name)
+
+
 def attach_absolute_image_paths(
-    manifest: DatasetManifest,
-    images_dir: str | Path,
+        manifest: DatasetManifest,
+        images_dir: str | Path,
 ) -> DatasetManifest:
     """
     Mutate samples in-place so sample.image_path becomes an absolute path.
@@ -77,15 +110,31 @@ def attach_absolute_image_paths(
     return manifest
 
 
-def load_docvqa_manifest_with_images(
-    qas_json_path: str | Path,
-    images_dir: str | Path,
+def attach_ocr_paths(
+        manifest: DatasetManifest,
+        ocr_dir: str | Path,
 ) -> DatasetManifest:
     """
-    Load a DocVQA manifest and convert all relative image paths to absolute paths.
+    Attach OCR path to sample.meta["ocr_path"] using image file stem.
+    """
+    for sample in manifest.samples:
+        sample.meta["ocr_path"] = resolve_docvqa_ocr_path(ocr_dir, sample.image_path)
+    return manifest
+
+
+def load_docvqa_manifest_with_assets(
+    qas_json_path: str | Path,
+    images_dir: str | Path,
+    ocr_dir: str | Path,
+) -> DatasetManifest:
+    """
+    Load a DocVQA manifest, convert image paths to absolute paths,
+    and attach OCR path into sample.meta["ocr_path"].
     """
     manifest = load_docvqa_manifest(qas_json_path)
-    return attach_absolute_image_paths(manifest, images_dir)
+    manifest = attach_absolute_image_paths(manifest, images_dir)
+    manifest = attach_ocr_paths(manifest, ocr_dir)
+    return manifest
 
 
 def load_docvqa_ocr_page(ocr_json_path: str | Path) -> OCRPage:

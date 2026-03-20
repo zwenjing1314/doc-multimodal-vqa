@@ -39,3 +39,14 @@ pytest tests/test_parser.py
 ```bash
 pytest
 ```
+
+# 新增/修改文件
+```text
+1) 更新 src/mm_docvqa/data/loader.py
+2）新增 scripts/inspect_docvqa_train.py
+```
+
+在项目根目录下执行以下命令：
+```bash
+python scripts/inspect_docvqa_train.py
+```
