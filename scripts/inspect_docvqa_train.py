@@ -11,17 +11,18 @@ from mm_docvqa.data.loader import (
 
 
 def main() -> None:
-    project_root = Path(__file__).resolve().parents[1]
-    docvqa_root = project_root / "datasets" / "docvqa"
+    project_root = Path(__file__).resolve().parents[1]  # 获取当前文件所在目录，将路径转化为绝对路径并往上跳两级返回祖父目录的绝对路径
+    docvqa_root = project_root / "datasets" / "docvqa"  # 获取数据集根目录
 
-    paths = DocVQAPaths.from_root(docvqa_root)
-    train_qas_file = get_default_docvqa_qas_file(paths.qas_dir, "train")
+    paths = DocVQAPaths.from_root(docvqa_root)  # 创建 DocVQAPaths 对象
+    train_qas_file = get_default_docvqa_qas_file(paths.qas_dir, "train")  # 获取 train 对应的训练集标注文件
 
     print("=" * 80)
     print("DocVQA dataset root:", paths.root)
     print("Train annotation file:", train_qas_file)
     print("=" * 80)
 
+    # 完成数据集级别的容器构建，里面的所有数据都被封装在 DatasetManifest 类中
     manifest = load_docvqa_manifest_with_assets(
         qas_json_path=train_qas_file,
         images_dir=paths.images_dir,

@@ -63,7 +63,7 @@ def parse_docvqa_sample(
         split=split,
         question_id=str(raw_sample["questionId"]),  # 转字符串保证一致性
         question=raw_sample["question"],
-        image_path=raw_sample["image"],
+        image_path=raw_sample["image"],  # "documents/xnbl0037_1.png"
         answers=raw_sample.get("answers", []),  # 可选字段，默认空列表
         question_types=raw_sample.get("question_types", []),
         doc_numeric_id=_to_int(raw_sample.get("docId")),  # 安全转换
@@ -94,8 +94,8 @@ def parse_docvqa_manifest(raw_manifest: dict[str, Any]) -> DatasetManifest:
     """
     dataset_split = raw_manifest.get("dataset_split", "unknown")
     samples = [
-        parse_docvqa_sample(sample, default_split=dataset_split)
-        for sample in raw_manifest.get("data", [])
+        parse_docvqa_sample(sample, default_split=dataset_split)  # sample 是 DocumentSample 实例化后的对象
+        for sample in raw_manifest.get("data", [])  # 第二个参数是默认值，如果 data 缺失，则返回空列表
     ]
 
     return DatasetManifest(
@@ -105,6 +105,7 @@ def parse_docvqa_manifest(raw_manifest: dict[str, Any]) -> DatasetManifest:
         samples=samples,
         source_files={},  # 留空，后续可由 loader 填充
     )
+
 
 # OCR 数据解析器（三级解析：Word → Line → Page）
 def parse_docvqa_ocr_word(raw_word: dict[str, Any], index: int | None = None) -> OCRWord:

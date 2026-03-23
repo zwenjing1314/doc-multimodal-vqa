@@ -92,9 +92,10 @@ def resolve_docvqa_ocr_path(ocr_dir: str | Path, relative_image_path: str) -> st
     OCR file name and image file name are one-to-one matched by stem.
     """
     ocr_dir = Path(ocr_dir)
-    image_name = Path(relative_image_path).name
-    ocr_name = Path(image_name).stem + ".json"
-    return str(ocr_dir / ocr_name)
+    # 获取遍历到 DocumentSample 对象里面的 image_path 的文件名
+    image_name = Path(relative_image_path).name  # image_path = relative_image_path = "documents/xnbl0037_1.png"
+    ocr_name = Path(image_name).stem + ".json"  # ocr_name = "xnbl0037_1.json"
+    return str(ocr_dir / ocr_name)  #
 
 
 def attach_absolute_image_paths(
@@ -131,9 +132,9 @@ def load_docvqa_manifest_with_assets(
     Load a DocVQA manifest, convert image paths to absolute paths,
     and attach OCR path into sample.meta["ocr_path"].
     """
-    manifest = load_docvqa_manifest(qas_json_path)
-    manifest = attach_absolute_image_paths(manifest, images_dir)
-    manifest = attach_ocr_paths(manifest, ocr_dir)
+    manifest = load_docvqa_manifest(qas_json_path)  # DatasetManifest对象，里面有两个方法，samples 里 DocumentSample 对象
+    manifest = attach_absolute_image_paths(manifest, images_dir)  # 返回 DatasetManifest，将 其属性 samples（DocumentSample 对象）的 image_path 填充进去
+    manifest = attach_ocr_paths(manifest, ocr_dir)  # 返回 DatasetManifest，将其属性 samples（DocumentSample ）的 meta["ocr_path"] 填充进去
     return manifest
 
 
